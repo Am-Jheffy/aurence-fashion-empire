@@ -59,14 +59,14 @@ export function Hero() {
             <button
               type="button"
               onClick={() => openModal("Customer")}
-              className="rounded-full bg-bordeaux px-7 py-3.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright"
+              className="rounded-full bg-bordeaux px-7 py-3.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright cursor-pointer"
             >
               Enter the House
             </button>
             <button
               type="button"
               onClick={() => openModal("Brand")}
-              className="eyebrow border-b border-champagne/50 pb-1 text-bone/80 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70"
+              className="eyebrow border-b border-champagne/50 pb-1 text-bone/80 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70 cursor-pointer"
             >
               Become a Partner Brand
             </button>

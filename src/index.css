@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@custom-variant light (&:where(.light, .light *));
+
+@theme {
+  /* ---- Color system: black & burgundy couture ---- */
+  --color-obsidian: #0b0708;
+  --color-obsidian-soft: #14100f;
+  --color-bone: #f7f1ec;
+  --color-bone-soft: #efe6dd;
+  --color-bordeaux: #6e0f1a;
+  --color-bordeaux-bright: #9e1b2b;
+  --color-champagne: #c9a227;
+  --color-champagne-soft: #e0c05a;
+  --color-ink: #1a1210;
+
+  /* ---- Type ---- */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Manrope", "Helvetica Neue", sans-serif;
+
+  /* ---- Motion ---- */
+  --ease-couture: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-obsidian text-bone font-body antialiased transition-colors duration-500;
+  }
+
+  html.light body {
+    @apply bg-bone text-ink;
+  }
+
+  ::selection {
+    background-color: var(--color-bordeaux);
+    color: var(--color-bone);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-champagne);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .eyebrow {
+    @apply font-body uppercase tracking-[0.28em] text-xs font-semibold;
+  }
+
+  .stitch-divider {
+    stroke-dasharray: 6 7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

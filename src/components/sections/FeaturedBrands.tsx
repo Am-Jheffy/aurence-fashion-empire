@@ -1,10 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { topBrands } from "@/lib/mockData";
+import { brands } from "@/lib/mockData";
+import { BrandCard } from "@/components/ui/BrandCard";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
 export function FeaturedBrands() {
+  const featured = brands.filter((brand) => brand.featured);
+
   return (
     <section className="bg-obsidian light:bg-bone">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
@@ -38,26 +41,8 @@ export function FeaturedBrands() {
         </div>
 
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {topBrands.map((brand, i) => (
-            <motion.div
-              key={brand.slug}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: easeCouture, delay: i * 0.06 }}
-            >
-              <Link
-                to={`/brands/${brand.slug}`}
-                className="group flex aspect-3/4 flex-col items-center justify-center rounded-lg border border-champagne/15 bg-obsidian-soft/60 px-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-champagne/50 light:bg-bone-soft/80"
-              >
-                <span className="font-display text-lg text-bone transition-colors group-hover:text-champagne sm:text-xl light:text-ink">
-                  {brand.name}
-                </span>
-                <span className="eyebrow mt-2 text-[10px] text-bone/45 light:text-ink/45">
-                  {brand.tagline}
-                </span>
-              </Link>
-            </motion.div>
+          {featured.map((brand, i) => (
+            <BrandCard key={brand.slug} brand={brand} index={i} />
           ))}
         </div>
       </div>

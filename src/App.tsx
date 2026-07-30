@@ -6,6 +6,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WaitlistModal } from "@/components/ui/WaitlistModal";
 import { Home } from "@/pages/Home";
+import { BrandsDirectory } from "@/pages/BrandsDirectory";
+import { BrandDetail } from "@/pages/BrandDetail";
 import { UnderConstruction } from "@/pages/UnderConstruction";
 
 function ScrollToTop() {
@@ -26,6 +28,8 @@ function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/brands" element={<BrandsDirectory />} />
+              <Route path="/brands/:slug" element={<BrandDetail />} />
               {/* Every other route is scaffolded for the future and
                   shows the couture "Under Construction" placeholder
                   until its real page is built. */}

@@ -7,9 +7,9 @@ export interface NavLink {
 
 export const primaryNav: NavLink[] = [
   { label: "Shop", path: "/shop", isLive: false },
-  { label: "Ateliers", path: "/ateliers", isLive: false },
-  { label: "Dressing Room", path: "/dressing-room", isLive: false },
+  { label: "Brands", path: "/brands", isLive: true },
   { label: "Designers", path: "/designers", isLive: false },
+  { label: "Dressing Room", path: "/dressing-room", isLive: false },
 ];
 
 export const footerShopLinks: NavLink[] = [

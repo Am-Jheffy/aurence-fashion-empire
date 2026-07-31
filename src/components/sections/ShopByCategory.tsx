@@ -8,24 +8,34 @@ export function ShopByCategory() {
   return (
     <section className="bg-obsidian-soft light:bg-bone-soft">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: easeCouture }}
-          className="eyebrow text-champagne"
-        >
-          Shop by Category
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: easeCouture, delay: 0.05 }}
-          className="font-display mt-3 max-w-lg text-3xl text-bone sm:text-4xl light:text-ink"
-        >
-          Find the piece, not just the brand.
-        </motion.h2>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: easeCouture }}
+              className="eyebrow text-champagne"
+            >
+              Shop by Category
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: easeCouture, delay: 0.05 }}
+              className="font-display mt-3 max-w-lg text-3xl text-bone sm:text-4xl light:text-ink"
+            >
+              Find the piece, not just the brand.
+            </motion.h2>
+          </div>
+          <Link
+            to="/shop"
+            className="eyebrow border-b border-champagne/50 pb-1 text-bone/70 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70"
+          >
+            View All Categories
+          </Link>
+        </div>
 
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {shopCategories.map((category, i) => (

@@ -32,10 +32,10 @@ export const brands: Brand[] = [
     name: "Vellamor",
     slug: "vellamor",
     tagline: "Bridal & Eveningwear",
-    categories: ["gowns", "wedding-attire"],
+    categories: ["gowns", "wedding-attire", "wigs"],
     story:
       "Vellamor has spent two decades perfecting the aisle-worthy silhouette — hand-draped tulle, corseted bodices, and eveningwear built for the moments that matter most.",
-    signaturePieces: ["Silk Charmeuse Gown", "Corseted Ballgown", "Cathedral Veil"],
+    signaturePieces: ["Silk Charmeuse Gown", "Corseted Ballgown", "Bridal Hair Piece"],
     featured: true,
   },
   {
@@ -118,6 +118,16 @@ export const brands: Brand[] = [
     signaturePieces: ["Original Print Kaftan", "Textile Wrap Skirt", "Print Headscarf"],
     isNew: true,
   },
+  {
+    name: "Belle Couronne",
+    slug: "belle-couronne",
+    tagline: "Wigs & Hair",
+    categories: ["wigs"],
+    story:
+      "Belle Couronne hand-ties every unit from ethically sourced human hair, cut and customized to match face shape and install method before it ships.",
+    signaturePieces: ["Lace Front Human Hair Wig", "Silk Press Bundle Set", "Bridal Hair Piece"],
+    isNew: true,
+  },
 ];
 
 export interface ShopCategory {
@@ -129,10 +139,11 @@ export interface ShopCategory {
 
 export const shopCategories: ShopCategory[] = [
   { label: "Gowns", slug: "gowns", glyph: "G" },
+  { label: "Wigs", slug: "wigs", glyph: "W" },
   { label: "Shoes", slug: "shoes", glyph: "S" },
   { label: "Bags", slug: "bags", glyph: "B" },
   { label: "Jewelry", slug: "jewelry", glyph: "J" },
-  { label: "Watches", slug: "watches", glyph: "W" },
+  // { label: "Watches", slug: "watches", glyph: "W" },
   { label: "Ankara", slug: "ankara", glyph: "A" },
   { label: "Coats", slug: "coats", glyph: "C" },
   { label: "Wedding Attire", slug: "wedding-attire", glyph: "V" },

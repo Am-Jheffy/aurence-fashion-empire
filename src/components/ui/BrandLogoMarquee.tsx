@@ -1,11 +1,6 @@
 import { motion } from "framer-motion";
 import { brands } from "@/lib/mockData";
 
-/**
- * No real brand logo assets exist yet, so this uses styled wordmarks
- * (Fraunces italic) rather than placeholder image files — swap in actual
- * logo images per brand once available, same layout otherwise.
- */
 export function BrandLogoMarquee() {
   return (
     <div className="overflow-hidden border-y border-champagne/10 py-6">

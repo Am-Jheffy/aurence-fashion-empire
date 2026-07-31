@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import { brands, shopCategories } from "@/lib/mockData";
 import { StitchLine } from "@/components/ui/StitchLine";
 import { useWaitlistModal } from "@/context/WaitlistModalContext";
+import { useFavoriteBrands } from "@/lib/useFavoriteBrands";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
 export function BrandDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { openModal } = useWaitlistModal();
+  const { isFavorite, toggleFavorite } = useFavoriteBrands();
   const brand = brands.find((b) => b.slug === slug);
 
   if (!brand) {
@@ -103,11 +105,15 @@ export function BrandDetail() {
             </button>
             <button
               type="button"
-              disabled
-              title="Favoriting brands opens once accounts launch"
-              className="eyebrow flex cursor-not-allowed items-center gap-1.5 text-bone/40 light:text-ink/40"
+              onClick={() => toggleFavorite(brand.slug)}
+              aria-pressed={isFavorite(brand.slug)}
+              className={`eyebrow flex items-center gap-1.5 rounded-full border px-5 py-3 transition-colors ${
+                isFavorite(brand.slug)
+                  ? "border-champagne bg-champagne text-obsidian"
+                  : "border-champagne/30 text-bone/60 hover:border-champagne/60 light:text-ink/60"
+              }`}
             >
-              ♡ Favorite
+              {isFavorite(brand.slug) ? "♥ Favorited" : "♡ Favorite"}
             </button>
           </div>
         </div>

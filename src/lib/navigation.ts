@@ -1,7 +1,6 @@
 export interface NavLink {
   label: string;
   path: string;
-  /** Marks features that exist beyond the "Under Construction" placeholder. */
   isLive: boolean;
 }
 

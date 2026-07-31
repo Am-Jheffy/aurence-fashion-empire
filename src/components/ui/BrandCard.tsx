@@ -18,9 +18,17 @@ interface BrandCardProps {
    * so cards reflow smoothly when the list changes.
    */
   variant?: "scroll" | "layout";
+  isFavorite?: boolean;
+  onToggleFavorite?: (slug: string) => void;
 }
 
-export function BrandCard({ brand, index = 0, variant = "scroll" }: BrandCardProps) {
+export function BrandCard({
+  brand,
+  index = 0,
+  variant = "scroll",
+  isFavorite = false,
+  onToggleFavorite,
+}: BrandCardProps) {
   const [hovered, setHovered] = useState(false);
   const isRich = variant === "layout";
 
@@ -66,7 +74,7 @@ export function BrandCard({ brand, index = 0, variant = "scroll" }: BrandCardPro
   const categoryLabels = brand.categories
     .map((slug) => shopCategories.find((c) => c.slug === slug)?.label)
     .filter((label): label is string => Boolean(label))
-    .slice(0, 2);
+    .slice(0, 3);
 
   return (
     <motion.div
@@ -85,6 +93,27 @@ export function BrandCard({ brand, index = 0, variant = "scroll" }: BrandCardPro
           <span className="eyebrow absolute left-3 top-3 z-10 rounded-full bg-champagne px-2 py-0.5 text-[9px] text-obsidian">
             New
           </span>
+        )}
+
+        {onToggleFavorite && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleFavorite(brand.slug);
+            }}
+            aria-label={
+              isFavorite ? `Remove ${brand.name} from favorites` : `Favorite ${brand.name}`
+            }
+            aria-pressed={isFavorite}
+            className={`absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border transition-colors ${
+              isFavorite
+                ? "border-champagne bg-champagne text-obsidian"
+                : "border-champagne/30 bg-obsidian/40 text-bone/70 hover:border-champagne/60 light:bg-bone/50 light:text-ink/60"
+            }`}
+          >
+            {isFavorite ? "♥" : "♡"}
+          </button>
         )}
 
         {/* Crossfade zone: monogram <-> signature pieces preview */}

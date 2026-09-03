@@ -149,6 +149,75 @@ export const shopCategories: ShopCategory[] = [
   { label: "Wedding Attire", slug: "wedding-attire", glyph: "V" },
 ];
 
+export interface Product {
+  id: string;
+  name: string;
+  brandSlug: string;
+  /** Matches ShopCategory.slug. */
+  category: string;
+  /** Whole-dollar placeholder price. */
+  price: number;
+  colors: string[];
+  isNew?: boolean;
+}
+
+/**
+ * Seeded from each brand's `signaturePieces` for continuity with what's
+ * already shown in the brand cards' hover preview — same product names,
+ * now with a price/color/category attached so they're filterable.
+ */
+export const products: Product[] = [
+  // Vellamor
+  { id: "vellamor-silk-charmeuse-gown", name: "Silk Charmeuse Gown", brandSlug: "vellamor", category: "gowns", price: 890, colors: ["Ivory", "Blush"] },
+  { id: "vellamor-corseted-ballgown", name: "Corseted Ballgown", brandSlug: "vellamor", category: "wedding-attire", price: 1450, colors: ["White", "Ivory"] },
+  { id: "vellamor-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "vellamor", category: "wigs", price: 210, colors: ["Blonde", "Brunette"] },
+
+  // Noire & Co.
+  { id: "noire-wool-trench-coat", name: "Wool Trench Coat", brandSlug: "noire-and-co", category: "coats", price: 620, colors: ["Black", "Camel"] },
+  { id: "noire-bias-cut-slip-dress", name: "Bias-Cut Slip Dress", brandSlug: "noire-and-co", category: "gowns", price: 340, colors: ["Black", "Emerald"] },
+  { id: "noire-structured-blazer", name: "Structured Blazer", brandSlug: "noire-and-co", category: "coats", price: 480, colors: ["Black", "Ivory"] },
+
+  // Isabeau Atelier
+  { id: "isabeau-hand-beaded-gown", name: "Hand-Beaded Gown", brandSlug: "isabeau-atelier", category: "wedding-attire", price: 2100, colors: ["Ivory"] },
+  { id: "isabeau-draped-cape-dress", name: "Draped Cape Dress", brandSlug: "isabeau-atelier", category: "gowns", price: 780, colors: ["Burgundy", "Black"] },
+  { id: "isabeau-embroidered-bodice", name: "Embroidered Bodice Gown", brandSlug: "isabeau-atelier", category: "gowns", price: 650, colors: ["Champagne", "Ivory"] },
+
+  // Rousseau Maison
+  { id: "rousseau-structured-tote", name: "Structured Tote", brandSlug: "rousseau-maison", category: "bags", price: 420, colors: ["Cognac", "Black"] },
+  { id: "rousseau-top-handle-satchel", name: "Top-Handle Satchel", brandSlug: "rousseau-maison", category: "bags", price: 380, colors: ["Black", "Burgundy"] },
+  { id: "rousseau-leather-clutch", name: "Leather Clutch", brandSlug: "rousseau-maison", category: "bags", price: 240, colors: ["Cognac", "Black", "Ivory"] },
+
+  // Thessaly
+  { id: "thessaly-emerald-drop-earrings", name: "Emerald Drop Earrings", brandSlug: "thessaly", category: "jewelry", price: 890, colors: ["Gold"], isNew: true },
+  { id: "thessaly-signet-ring", name: "Signet Ring", brandSlug: "thessaly", category: "jewelry", price: 310, colors: ["Gold", "Silver"], isNew: true },
+  { id: "thessaly-two-tone-watch", name: "Two-Tone Watch", brandSlug: "thessaly", category: "watches", price: 1200, colors: ["Gold/Silver"], isNew: true },
+
+  // Kavir House
+  { id: "kavir-wax-print-wrap-dress", name: "Wax-Print Wrap Dress", brandSlug: "kavir-house", category: "ankara", price: 180, colors: ["Multicolor"] },
+  { id: "kavir-ankara-blazer", name: "Ankara Blazer", brandSlug: "kavir-house", category: "ankara", price: 260, colors: ["Multicolor"] },
+  { id: "kavir-head-wrap-set", name: "Head Wrap Set", brandSlug: "kavir-house", category: "ankara", price: 85, colors: ["Multicolor"] },
+
+  // Solenne & Vale
+  { id: "solenne-hand-lasted-pumps", name: "Hand-Lasted Pumps", brandSlug: "solenne-and-vale", category: "shoes", price: 340, colors: ["Black", "Nude"], isNew: true },
+  { id: "solenne-block-heel-sandal", name: "Block-Heel Sandal", brandSlug: "solenne-and-vale", category: "shoes", price: 290, colors: ["Tan", "Black"], isNew: true },
+  { id: "solenne-leather-loafer", name: "Leather Loafer", brandSlug: "solenne-and-vale", category: "shoes", price: 260, colors: ["Black", "Burgundy"], isNew: true },
+
+  // Marchetti Casa
+  { id: "marchetti-wool-overcoat", name: "Wool Overcoat", brandSlug: "marchetti-casa", category: "coats", price: 720, colors: ["Charcoal", "Camel"] },
+  { id: "marchetti-monochrome-midi-dress", name: "Monochrome Midi Dress", brandSlug: "marchetti-casa", category: "gowns", price: 410, colors: ["Black", "Ivory"] },
+  { id: "marchetti-tailored-trouser", name: "Tailored Trouser", brandSlug: "marchetti-casa", category: "coats", price: 260, colors: ["Charcoal", "Black"] },
+
+  // Noor Textiles
+  { id: "noor-original-print-kaftan", name: "Original Print Kaftan", brandSlug: "noor-textiles", category: "ankara", price: 220, colors: ["Multicolor"], isNew: true },
+  { id: "noor-textile-wrap-skirt", name: "Textile Wrap Skirt", brandSlug: "noor-textiles", category: "ankara", price: 150, colors: ["Multicolor"], isNew: true },
+  { id: "noor-print-headscarf", name: "Print Headscarf", brandSlug: "noor-textiles", category: "ankara", price: 60, colors: ["Multicolor"], isNew: true },
+
+  // Belle Couronne
+  { id: "belle-lace-front-wig", name: "Lace Front Human Hair Wig", brandSlug: "belle-couronne", category: "wigs", price: 380, colors: ["Black", "Brunette", "Blonde"], isNew: true },
+  { id: "belle-silk-press-bundle-set", name: "Silk Press Bundle Set", brandSlug: "belle-couronne", category: "wigs", price: 150, colors: ["Black", "Brunette"], isNew: true },
+  { id: "belle-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "belle-couronne", category: "wigs", price: 95, colors: ["Blonde", "Brunette"], isNew: true },
+];
+
 export interface Designer {
   name: string;
   slug: string;

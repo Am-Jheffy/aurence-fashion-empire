@@ -287,7 +287,7 @@ export function ShopCategory() {
               className="border-r border-champagne/20 bg-transparent px-3 py-2.5 text-sm text-bone focus:outline-none light:text-ink"
             >
               {shopCategories.map((c) => (
-                <option key={c.slug} value={c.slug}>
+                <option key={c.slug} value={c.slug} className="bg-obsidian-soft/95 light:bg-bone-soft/80 ">
                   {c.label}
                 </option>
               ))}

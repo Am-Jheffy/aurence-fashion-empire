@@ -223,13 +223,55 @@ export interface Designer {
   slug: string;
   specialty: string;
   initials: string;
+  bio: string;
+  /** A few named pieces shown on the designer's profile page. */
+  notableWork?: string[];
+  /**
+   * Category slugs this designer specializes in — matches
+   * ShopCategory.slug. Rendered as links to /shop/:category on the
+   * profile page. Note: "suiting" doesn't have a matching shop category
+   * yet, so Lior is loosely tagged under "coats" until one exists.
+   */
+  categories?: string[];
 }
 
 export const featuredDesigners: Designer[] = [
-  { name: "Adaeze Obi", slug: "adaeze-obi", specialty: "Bridal Couture", initials: "AO" },
-  { name: "Lior Ben-David", slug: "lior-ben-david", specialty: "Tailored Suiting", initials: "LB" },
-  { name: "Camille Deschamps", slug: "camille-deschamps", specialty: "Eveningwear", initials: "CD" },
-  { name: "Ngozi Umeh", slug: "ngozi-umeh", specialty: "Ankara & Print", initials: "NU" },
+  {
+    name: "Adaeze Obi",
+    slug: "adaeze-obi",
+    specialty: "Bridal Couture",
+    initials: "AO",
+    bio: "Adaeze has spent twelve years shaping bridal silhouettes by hand — every gown starts with a single fitting and a conversation about how the day should feel, not just look.",
+    notableWork: ["Cathedral Lace Gown", "Convertible Two-Piece Bridal Set", "Hand-Beaded Bridal Cape"],
+    categories: ["gowns", "wedding-attire"],
+  },
+  {
+    name: "Lior Ben-David",
+    slug: "lior-ben-david",
+    specialty: "Tailored Suiting",
+    initials: "LB",
+    bio: "Lior trained on Savile Row before opening his own atelier, building suits around how a client actually moves rather than how they stand still for a fitting.",
+    notableWork: ["Three-Piece Wool Suit", "Double-Breasted Evening Jacket", "Made-to-Measure Waistcoat"],
+    categories: ["coats"],
+  },
+  {
+    name: "Camille Deschamps",
+    slug: "camille-deschamps",
+    specialty: "Eveningwear",
+    initials: "CD",
+    bio: "Camille designs for the specific hour after sunset — draped eveningwear built to move under low light, informed by her years designing for the stage before fashion.",
+    notableWork: ["Silk Draped Column Gown", "Structured Cape Gown", "Beaded Evening Blouse"],
+    categories: ["gowns"],
+  },
+  {
+    name: "Ngozi Umeh",
+    slug: "ngozi-umeh",
+    specialty: "Ankara & Print",
+    initials: "NU",
+    bio: "Ngozi works exclusively in commissioned print combinations, designing one-of-one pieces that never repeat a fabric pairing twice.",
+    notableWork: ["Custom Ankara Gown", "Print-Blocked Two-Piece Set", "Commissioned Head Wrap"],
+    categories: ["ankara"],
+  },
 ];
 
 export interface PartnerType {

@@ -4,7 +4,9 @@ import type { AudienceType } from "@/lib/waitlist";
 interface WaitlistModalContextValue {
   isOpen: boolean;
   audienceType: AudienceType;
-  openModal: (type?: AudienceType) => void;
+  /** Pre-fills the modal's message field — still editable by the visitor. */
+  prefillMessage: string;
+  openModal: (type?: AudienceType, message?: string) => void;
   closeModal: () => void;
 }
 
@@ -15,9 +17,11 @@ const WaitlistModalContext = createContext<WaitlistModalContextValue | undefined
 export function WaitlistModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [audienceType, setAudienceType] = useState<AudienceType>("Customer");
+  const [prefillMessage, setPrefillMessage] = useState("");
 
-  const openModal = (type: AudienceType = "Customer") => {
+  const openModal = (type: AudienceType = "Customer", message: string = "") => {
     setAudienceType(type);
+    setPrefillMessage(message);
     setIsOpen(true);
   };
 
@@ -25,7 +29,7 @@ export function WaitlistModalProvider({ children }: { children: ReactNode }) {
 
   return (
     <WaitlistModalContext.Provider
-      value={{ isOpen, audienceType, openModal, closeModal }}
+      value={{ isOpen, audienceType, prefillMessage, openModal, closeModal }}
     >
       {children}
     </WaitlistModalContext.Provider>

@@ -23,7 +23,7 @@ const subtitleByAudience: Record<AudienceType, string> = {
 };
 
 export function WaitlistModal() {
-  const { isOpen, audienceType, closeModal } = useWaitlistModal();
+  const { isOpen, audienceType, prefillMessage, closeModal } = useWaitlistModal();
   const [selected, setSelected] = useState<AudienceType>(audienceType);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,18 +33,19 @@ export function WaitlistModal() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Sync the selector to whichever audience the trigger button requested,
-  // and reset the form each time the modal is freshly opened.
+  // pre-fill the message if one was given, and reset the form each time
+  // the modal is freshly opened.
   useEffect(() => {
     if (isOpen) {
       setSelected(audienceType);
       setName("");
       setEmail("");
-      setMessage("");
+      setMessage(prefillMessage);
       setSubmitted(false);
       setIsSubmitting(false);
       setSubmitError(null);
     }
-  }, [isOpen, audienceType]);
+  }, [isOpen, audienceType, prefillMessage]);
 
   // ESC to close, and lock body scroll while open.
   useEffect(() => {
@@ -138,7 +139,7 @@ export function WaitlistModal() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mt-7 rounded-full bg-bordeaux px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright cursor-pointer"
+                  className="mt-7 rounded-full bg-bordeaux px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright"
                 >
                   Done
                 </button>
@@ -231,7 +232,7 @@ export function WaitlistModal() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="mt-2 rounded-full bg-bordeaux px-6 py-3 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                    className="mt-2 rounded-full bg-bordeaux px-6 py-3 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isSubmitting
                       ? "Sending..."

@@ -10,6 +10,7 @@ import { BrandsDirectory } from "@/pages/BrandsDirectory";
 import { BrandDetail } from "@/pages/BrandDetail";
 import { Shop } from "@/pages/Shop";
 import { ShopCategory } from "@/pages/ShopCategory";
+import { DesignerDetail } from "@/pages/DesignerDetail";
 import { UnderConstruction } from "@/pages/UnderConstruction";
 
 function ScrollToTop() {
@@ -34,6 +35,7 @@ function App() {
               <Route path="/brands/:slug" element={<BrandDetail />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:category" element={<ShopCategory />} />
+              <Route path="/designers/:slug" element={<DesignerDetail />} />
               {/* Every other route is scaffolded for the future and
                   shows the couture "Under Construction" placeholder
                   until its real page is built. */}

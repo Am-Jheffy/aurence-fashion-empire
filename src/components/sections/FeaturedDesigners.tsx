@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { featuredDesigners } from "@/lib/mockData";
+import { DesignerCard } from "@/components/ui/DesignerCard";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
@@ -39,31 +40,7 @@ export function FeaturedDesigners() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featuredDesigners.map((designer, i) => (
-            <motion.div
-              key={designer.slug}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: easeCouture, delay: i * 0.08 }}
-            >
-              <Link
-                to={`/designers/${designer.slug}`}
-                className="group flex flex-col items-center rounded-lg border border-champagne/15 bg-obsidian-soft/60 px-5 py-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-champagne/50 light:bg-bone-soft/80"
-              >
-                <span className="font-display flex h-16 w-16 items-center justify-center rounded-full bg-bordeaux text-xl italic text-champagne">
-                  {designer.initials}
-                </span>
-                <span className="font-display mt-4 text-lg text-bone light:text-ink">
-                  {designer.name}
-                </span>
-                <span className="eyebrow mt-1 text-[10px] text-bone/45 light:text-ink/45">
-                  {designer.specialty}
-                </span>
-                <span className="eyebrow mt-4 text-champagne opacity-0 transition-opacity group-hover:opacity-100">
-                  Book Appointment
-                </span>
-              </Link>
-            </motion.div>
+            <DesignerCard key={designer.slug} designer={designer} index={i} />
           ))}
         </div>
       </div>

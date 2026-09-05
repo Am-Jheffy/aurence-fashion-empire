@@ -5,18 +5,18 @@ export interface NavLink {
 }
 
 export const primaryNav: NavLink[] = [
-  { label: "Shop", path: "/shop", isLive: false },
+  { label: "Shop", path: "/shop", isLive: true },
   { label: "Brands", path: "/brands", isLive: true },
-  { label: "Designers", path: "/designers", isLive: false },
+  { label: "Designers", path: "/designers", isLive: true },
   { label: "Dressing Room", path: "/dressing-room", isLive: false },
 ];
 
 export const footerShopLinks: NavLink[] = [
-  { label: "Gowns", path: "/shop/gowns", isLive: false },
-  { label: "Ankara", path: "/shop/ankara", isLive: false },
-  { label: "Shoes", path: "/shop/shoes", isLive: false },
-  { label: "Jewelry", path: "/shop/jewelry", isLive: false },
-  { label: "Wedding Attire", path: "/shop/wedding-attire", isLive: false },
+  { label: "Gowns", path: "/shop/gowns", isLive: true },
+  { label: "Ankara", path: "/shop/ankara", isLive: true },
+  { label: "Shoes", path: "/shop/shoes", isLive: true },
+  { label: "Jewelry", path: "/shop/jewelry", isLive: true },
+  { label: "Wedding Attire", path: "/shop/wedding-attire", isLive: true },
 ];
 
 export const footerHouseLinks: NavLink[] = [

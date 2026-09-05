@@ -39,6 +39,10 @@ export function DesignerDetail() {
             Home
           </Link>
           <span className="mx-2">/</span>
+          <Link to="/designers" className="transition-colors hover:text-champagne">
+            Designers
+          </Link>
+          <span className="mx-2">/</span>
           <span className="text-champagne">{designer.name}</span>
         </nav>
 

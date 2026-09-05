@@ -9,7 +9,7 @@ const easeCouture = [0.16, 1, 0.3, 1] as const;
 
 function SpecialtyTicker() {
   return (
-    <div className="overflow-hidden border-y border-champagne/10 py-6">
+    <div className="overflow-hidden border-y border-champagne/10 py-6 bg-linear-to-l from-green-950 via-indigo-950 to-red-950 light:from-green-100 light:via-indigo-100 light:to-red-100">
       <div className="flex whitespace-nowrap">
         <SpecialtyTrack />
         <SpecialtyTrack aria-hidden />
@@ -103,7 +103,7 @@ export function DesignersDirectory() {
 
       {/* Sticky search & filter bar */}
       <div className="sticky top-16 z-40 border-b border-champagne/10 bg-obsidian/95 px-6 py-4 backdrop-blur-md light:bg-bone/95 lg:top-18 lg:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between ">
           <input
             type="text"
             value={search}

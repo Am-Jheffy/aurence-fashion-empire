@@ -56,11 +56,18 @@ export function ProductCard({ product, index = 0, variant = "compact" }: Product
         to={`/brands/${product.brandSlug}`}
         className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-champagne/15 bg-obsidian-soft/60 transition-all duration-300 hover:-translate-y-1 hover:border-champagne/50 light:bg-bone-soft/80"
       >
-        {product.isNew && (
-          <span className="eyebrow absolute left-3 top-3 z-10 rounded-full bg-champagne px-2 py-0.5 text-[9px] text-obsidian">
-            New
-          </span>
-        )}
+        <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
+          {product.isNew && (
+            <span className="eyebrow rounded-full bg-champagne px-2 py-0.5 text-[9px] text-obsidian">
+              New
+            </span>
+          )}
+          {product.topSeller && (
+            <span className="eyebrow rounded-full bg-bordeaux-bright px-2 py-0.5 text-[9px] text-bone">
+              Top Seller
+            </span>
+          )}
+        </div>
 
         {isShopping && (
           <button

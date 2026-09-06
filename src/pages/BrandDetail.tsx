@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { brands, shopCategories } from "@/lib/mockData";
+import { brands, products, shopCategories, type Review } from "@/lib/mockData";
 import { StitchLine } from "@/components/ui/StitchLine";
+import { StarRating } from "@/components/ui/StarRating";
+import { ProductCard } from "@/components/ui/ProductCard";
 import { useWaitlistModal } from "@/context/WaitlistModalContext";
 import { useFavoriteBrands } from "@/lib/useFavoriteBrands";
 
@@ -13,12 +16,30 @@ export function BrandDetail() {
   const { isFavorite, toggleFavorite } = useFavoriteBrands();
   const brand = brands.find((b) => b.slug === slug);
 
+  // Reviews live in local state seeded from the brand's mock data, so a
+  // submitted review appears immediately — but this resets on reload and
+  // does NOT persist anywhere. Real persistence needs a backend; this is
+  // just enough to demo the full interaction.
+  const [sessionReviews, setSessionReviews] = useState<Review[]>(brand?.reviews ?? []);
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [newRating, setNewRating] = useState(0);
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newComment, setNewComment] = useState("");
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  useEffect(() => {
+    setSessionReviews(brand?.reviews ?? []);
+    setShowAllReviews(false);
+    setNewRating(0);
+    setNewAuthor("");
+    setNewComment("");
+    setReviewSubmitted(false);
+  }, [slug, brand?.reviews]);
+
   if (!brand) {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4 bg-obsidian px-6 pt-24 text-center light:bg-bone">
-        <p className="font-display text-2xl text-bone light:text-ink">
-          Brand not found
-        </p>
+        <p className="font-display text-2xl text-bone light:text-ink">Brand not found</p>
         <Link to="/brands" className="eyebrow text-champagne">
           ← Back to All Brands
         </Link>
@@ -26,13 +47,64 @@ export function BrandDetail() {
     );
   }
 
-  const categoryLabels = brand.categories
-    .map((slug) => shopCategories.find((c) => c.slug === slug)?.label)
-    .filter((label): label is string => Boolean(label));
+  const categoryTags = brand.categories
+    .map((catSlug) => shopCategories.find((c) => c.slug === catSlug))
+    .filter((c): c is (typeof shopCategories)[number] => Boolean(c));
+
+  const brandProducts = products.filter((p) => p.brandSlug === brand.slug);
+  const categoriesWithProducts = brand.categories
+    .map((catSlug) => ({
+      category: shopCategories.find((c) => c.slug === catSlug),
+      items: brandProducts.filter((p) => p.category === catSlug),
+    }))
+    .filter((entry) => entry.category && entry.items.length > 0);
+
+  const averageRating =
+    sessionReviews.length > 0
+      ? sessionReviews.reduce((sum, r) => sum + r.rating, 0) / sessionReviews.length
+      : 0;
+  const likedByDisplay = brand.likedByCount + (isFavorite(brand.slug) ? 1 : 0);
+  const visibleReviews = showAllReviews ? sessionReviews : sessionReviews.slice(0, 3);
+
+  const stats = [
+    {
+      label: "Rating",
+      value: (
+        <div className="flex items-center justify-center gap-1.5">
+          <StarRating rating={averageRating} />
+          <span>{sessionReviews.length > 0 ? averageRating.toFixed(1) : "—"}</span>
+        </div>
+      ),
+    },
+    { label: "Reviews", value: sessionReviews.length },
+    { label: "Joined", value: brand.dateJoined },
+    { label: "Liked By", value: likedByDisplay },
+    { label: "Goods Listed", value: brandProducts.length },
+  ];
+
+  function handleSubmitReview(e: React.FormEvent) {
+    e.preventDefault();
+    if (newRating === 0 || !newComment.trim()) return;
+
+    const review: Review = {
+      id: `session-${Date.now()}`,
+      author: newAuthor.trim() || "Anonymous",
+      rating: newRating,
+      comment: newComment.trim(),
+      date: "Just now",
+    };
+    setSessionReviews((prev) => [review, ...prev]);
+    setNewRating(0);
+    setNewAuthor("");
+    setNewComment("");
+    setReviewSubmitted(true);
+    window.setTimeout(() => setReviewSubmitted(false), 2500);
+  }
 
   return (
     <div className="bg-obsidian light:bg-bone">
-      <div className="mx-auto max-w-4xl px-6 pb-16 pt-28 lg:px-10 lg:pt-36">
+      {/* Hero */}
+      <div className="mx-auto max-w-4xl px-6 pb-12 pt-28 lg:px-10 lg:pt-36">
         <nav className="eyebrow text-bone/40 light:text-ink/40">
           <Link to="/" className="transition-colors hover:text-champagne">
             Home
@@ -73,15 +145,16 @@ export function BrandDetail() {
           </motion.h1>
           <p className="eyebrow mt-3 text-champagne">{brand.tagline}</p>
 
-          {categoryLabels.length > 0 && (
+          {categoryTags.length > 0 && (
             <div className="mt-5 flex flex-wrap justify-center gap-2">
-              {categoryLabels.map((label) => (
-                <span
-                  key={label}
-                  className="eyebrow rounded-full border border-champagne/25 px-3 py-1 text-bone/60 light:text-ink/60"
+              {categoryTags.map((category) => (
+                <Link
+                  key={category.slug}
+                  to={`/shop/${category.slug}?brand=${brand.slug}`}
+                  className="eyebrow rounded-full border border-champagne/25 px-3 py-1 text-bone/60 transition-colors hover:border-champagne hover:text-champagne light:text-ink/60"
                 >
-                  {label}
-                </span>
+                  {category.label}
+                </Link>
               ))}
             </div>
           )}
@@ -95,13 +168,22 @@ export function BrandDetail() {
             {brand.story}
           </motion.p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
               onClick={() => openModal("Customer")}
-              className="rounded-full bg-bordeaux px-7 py-3 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright"
+              className="rounded-full bg-bordeaux px-6 py-3 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright"
             >
               Notify Me When the Catalog Opens
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                openModal("Customer", `I'd like to request a custom piece from ${brand.name}.`)
+              }
+              className="eyebrow rounded-full border border-champagne/30 px-5 py-3 text-bone/70 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70"
+            >
+              Request Customization
             </button>
             <button
               type="button"
@@ -115,40 +197,213 @@ export function BrandDetail() {
             >
               {isFavorite(brand.slug) ? "♥ Favorited" : "♡ Favorite"}
             </button>
+            <button
+              type="button"
+              disabled
+              title="Available once you have an Aurence account, so messages can be tracked from your Dressing Room"
+              className="eyebrow flex cursor-not-allowed items-center gap-1.5 rounded-full border border-champagne/15 px-5 py-3 text-bone/35 light:text-ink/35"
+            >
+              ✉ Message Brand
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Stats / analytics bar */}
+      <div className="border-y border-champagne/10 bg-obsidian-soft light:bg-bone-soft">
+        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 px-6 py-8 sm:grid-cols-5 lg:px-10">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="font-display text-lg text-bone light:text-ink">{stat.value}</div>
+              <p className="eyebrow mt-1.5 text-[10px] text-bone/45 light:text-ink/45">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Item rows, grouped by category, each linking to the Main Shopping View */}
+      {categoriesWithProducts.length > 0 && (
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
+          {categoriesWithProducts.map(({ category, items }) => (
+            <section key={category!.slug} className="mb-14 last:mb-0">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-display flex h-9 w-9 items-center justify-center rounded-full border border-champagne/30 text-sm italic text-champagne">
+                    {category!.glyph}
+                  </span>
+                  <h2 className="font-display text-xl text-bone sm:text-2xl light:text-ink">
+                    {category!.label}
+                  </h2>
+                </div>
+                <Link
+                  to={`/shop/${category!.slug}?brand=${brand.slug}`}
+                  className="eyebrow border-b border-champagne/50 pb-1 text-bone/70 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70"
+                >
+                  View All {category!.label}
+                </Link>
+              </div>
+              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {items.map((product, i) => (
+                  <ProductCard key={product.id} product={product} index={i} />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
 
       <div className="mx-auto max-w-4xl px-6">
         <StitchLine orientation="horizontal" className="text-champagne/20" />
       </div>
 
-      {/* Catalog opening soon */}
-      <div className="relative mx-auto max-w-6xl px-6 py-16 lg:px-10 lg:py-20">
-        <p className="eyebrow text-center text-champagne">The Collection</p>
-        <h2 className="font-display mt-2 text-center text-2xl text-bone light:text-ink">
-          Opening Soon
-        </h2>
-
-        <div className="relative mt-10">
-          <div
-            aria-hidden="true"
-            className="grid grid-cols-2 gap-4 opacity-30 blur-[1px] sm:grid-cols-3 lg:grid-cols-4"
-          >
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-3/4 rounded-lg border border-champagne/15 bg-obsidian-soft/60 light:bg-bone-soft/80"
-              />
-            ))}
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center px-6">
-            <span className="eyebrow rounded-full bg-bordeaux px-5 py-2 text-center text-bone shadow-lg">
-              {brand.name}'s catalog is being tailored
+      {/* Ratings & Reviews */}
+      <div className="mx-auto max-w-3xl px-6 py-16 lg:px-10">
+        <div className="text-center">
+          <p className="eyebrow text-champagne">Ratings &amp; Reviews</p>
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <StarRating rating={averageRating} size="md" />
+            <span className="font-display text-xl text-bone light:text-ink">
+              {sessionReviews.length > 0 ? averageRating.toFixed(1) : "No ratings yet"}
             </span>
           </div>
+          <p className="mt-1 text-xs text-bone/45 light:text-ink/45">
+            Based on {sessionReviews.length} review{sessionReviews.length === 1 ? "" : "s"}
+          </p>
         </div>
+
+        {sessionReviews.length > 0 && (
+          <div className="mt-10 flex flex-col gap-5">
+            {visibleReviews.map((review) => (
+              <div
+                key={review.id}
+                className="rounded-lg border border-champagne/15 bg-obsidian-soft/60 p-5 light:bg-bone-soft/80"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-display text-sm text-bone light:text-ink">
+                    {review.author}
+                  </span>
+                  <span className="text-xs text-bone/40 light:text-ink/40">{review.date}</span>
+                </div>
+                <StarRating rating={review.rating} />
+                <p className="mt-2 text-sm leading-relaxed text-bone/70 light:text-ink/70">
+                  {review.comment}
+                </p>
+              </div>
+            ))}
+
+            {sessionReviews.length > 3 && (
+              <button
+                type="button"
+                onClick={() => setShowAllReviews((prev) => !prev)}
+                className="eyebrow self-center text-champagne underline underline-offset-2"
+              >
+                {showAllReviews ? "Show Less" : `View All ${sessionReviews.length} Reviews`}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Submission form — session-only, see the component-level note above */}
+        <form
+          onSubmit={handleSubmitReview}
+          className="mt-12 flex flex-col gap-4 rounded-lg border border-champagne/15 bg-obsidian-soft/60 p-6 light:bg-bone-soft/80"
+        >
+          <p className="eyebrow text-champagne">Leave a Rating &amp; Review</p>
+
+          <div>
+            <span className="eyebrow text-bone/60 light:text-ink/60">Your Rating</span>
+            <div className="mt-1.5">
+              <StarRating rating={newRating} size="md" interactive onChange={setNewRating} />
+            </div>
+          </div>
+
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="eyebrow text-bone/60 light:text-ink/60">
+              Name <span className="normal-case tracking-normal text-bone/35 light:text-ink/35">(optional)</span>
+            </span>
+            <input
+              type="text"
+              value={newAuthor}
+              onChange={(e) => setNewAuthor(e.target.value)}
+              placeholder="Your name"
+              className="rounded-md border border-champagne/25 bg-obsidian px-3.5 py-2.5 text-sm text-bone placeholder:text-bone/35 focus:border-champagne focus:outline-none light:bg-bone light:text-ink light:placeholder:text-ink/35"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="eyebrow text-bone/60 light:text-ink/60">Comment</span>
+            <textarea
+              required
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={`What did you think of ${brand.name}?`}
+              rows={3}
+              className="resize-none rounded-md border border-champagne/25 bg-obsidian px-3.5 py-2.5 text-sm text-bone placeholder:text-bone/35 focus:border-champagne focus:outline-none light:bg-bone light:text-ink light:placeholder:text-ink/35"
+            />
+          </label>
+
+          {reviewSubmitted && (
+            <p className="text-sm text-champagne">Thanks for your review!</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={newRating === 0}
+            className="self-start rounded-full bg-bordeaux px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Submit Review
+          </button>
+          <p className="text-xs text-bone/35 light:text-ink/35">
+            Reviews shown here are for this browsing session only — they aren't saved yet.
+          </p>
+        </form>
       </div>
+
+      {/* Closing summary CTA */}
+      <section className="relative w-full overflow-hidden bg-linear-to-br from-obsidian via-bordeaux/40 to-obsidian light:from-bone light:via-bordeaux/10 light:to-bone">
+        <motion.div
+          aria-hidden="true"
+          animate={{ x: ["-10%", "10%", "-10%"], y: ["-5%", "5%", "-5%"] }}
+          transition={{ duration: 18, ease: "easeInOut", repeat: Infinity }}
+          className="pointer-events-none absolute left-1/2 top-1/2 h-125 w-225 -translate-x-1/2 -translate-y-1/2 rounded-full bg-bordeaux-bright/30 blur-[160px]"
+        />
+
+        <div className="relative mx-auto max-w-3xl px-6 py-24 text-center lg:px-10 lg:py-28">
+          <p className="eyebrow text-champagne">In Summary</p>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: easeCouture }}
+            className="font-display mt-5 text-3xl text-bone sm:text-5xl light:text-ink"
+          >
+            Loved by {likedByDisplay} shopper{likedByDisplay === 1 ? "" : "s"}
+            {sessionReviews.length > 0 ? `, rated ${averageRating.toFixed(1)} stars` : ""}.
+          </motion.h2>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-bone/70 light:text-ink/70">
+            {brand.name} lists {brandProducts.length} piece{brandProducts.length === 1 ? "" : "s"}{" "}
+            across {categoryTags.length} categor{categoryTags.length === 1 ? "y" : "ies"} on
+            Aurence, with the full catalog opening soon.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => openModal("Customer")}
+              className="rounded-full bg-bordeaux px-8 py-3.5 text-sm font-semibold text-bone transition-all duration-300 hover:scale-105 hover:bg-bordeaux-bright"
+            >
+              Notify Me When It Opens
+            </button>
+            <Link
+              to="/brands"
+              className="eyebrow border-b border-champagne/50 pb-1 text-bone/70 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70"
+            >
+              Explore More Brands
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

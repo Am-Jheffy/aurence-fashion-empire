@@ -53,7 +53,7 @@ export function ProductCard({ product, index = 0, variant = "compact" }: Product
       transition={{ duration: 0.4, ease: easeCouture, delay: index * 0.03 }}
     >
       <Link
-        to={`/brands/${product.brandSlug}`}
+        to={`/products/${product.id}`}
         className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-champagne/15 bg-obsidian-soft/60 transition-all duration-300 hover:-translate-y-1 hover:border-champagne/50 light:bg-bone-soft/80"
       >
         <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">

@@ -3,7 +3,7 @@ import { brands } from "@/lib/mockData";
 
 export function BrandLogoMarquee() {
   return (
-    <div className="overflow-hidden border-y border-champagne/10 py-6">
+    <div className="overflow-hidden border-y border-champagne/10 py-6 bg-linear-to-l from-fuchsia-950 via-champagne/30 to-amber-950 light:from-fuchsia-200 light:via-sky-100 light:to-amber-100">
       <div className="flex whitespace-nowrap">
         <MarqueeTrack />
         <MarqueeTrack aria-hidden />
@@ -17,7 +17,7 @@ function MarqueeTrack(props: { "aria-hidden"?: boolean }) {
     <motion.div
       {...props}
       animate={{ x: ["0%", "-100%"] }}
-      transition={{ duration: 30, ease: "linear", repeat: Infinity }}
+      transition={{ duration: 32, ease: "linear", repeat: Infinity }}
       className="flex shrink-0 items-center gap-10 pr-10"
     >
       {brands.map((brand, i) => (

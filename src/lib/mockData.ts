@@ -233,14 +233,14 @@ export interface ShopCategory {
 
 export const shopCategories: ShopCategory[] = [
   { label: "Gowns", slug: "gowns", glyph: "G" },
-  { label: "Wigs", slug: "wigs", glyph: "W" },
   { label: "Shoes", slug: "shoes", glyph: "S" },
   { label: "Bags", slug: "bags", glyph: "B" },
   { label: "Jewelry", slug: "jewelry", glyph: "J" },
-  // { label: "Watches", slug: "watches", glyph: "W" },
+  { label: "Watches", slug: "watches", glyph: "W" },
   { label: "Ankara", slug: "ankara", glyph: "A" },
   { label: "Coats", slug: "coats", glyph: "C" },
   { label: "Wedding Attire", slug: "wedding-attire", glyph: "V" },
+  { label: "Wigs", slug: "wigs", glyph: "H" },
 ];
 
 export interface Product {
@@ -255,6 +255,20 @@ export interface Product {
   isNew?: boolean;
   /** Shown as a "Top Seller" badge on product cards. */
   topSeller?: boolean;
+  description?: string;
+  /**
+   * Omitted entirely for products that don't need sizing (bags, jewelry
+   * apart from rings, watches, headscarves, etc.) — the size selector on
+   * the product page only renders "where necessary".
+   */
+  sizes?: string[];
+  /**
+   * Only populated for a handful of products so far (the topSeller ones,
+   * one per brand) — real marketplaces don't have even review coverage
+   * across every listing either. Products without reviews show an empty
+   * state and a working submission form, same as ones that do.
+   */
+  reviews?: Review[];
 }
 
 /**
@@ -264,54 +278,204 @@ export interface Product {
  */
 export const products: Product[] = [
   // Vellamor
-  { id: "vellamor-silk-charmeuse-gown", name: "Silk Charmeuse Gown", brandSlug: "vellamor", category: "gowns", price: 890, colors: ["Ivory", "Blush"], topSeller: true },
-  { id: "vellamor-corseted-ballgown", name: "Corseted Ballgown", brandSlug: "vellamor", category: "wedding-attire", price: 1450, colors: ["White", "Ivory"] },
-  { id: "vellamor-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "vellamor", category: "wigs", price: 210, colors: ["Blonde", "Brunette"] },
+  {
+    id: "vellamor-silk-charmeuse-gown", name: "Silk Charmeuse Gown", brandSlug: "vellamor", category: "gowns", price: 890, colors: ["Ivory", "Blush"], topSeller: true,
+    description: "A fluid, bias-cut gown in liquid silk charmeuse, finished with a hand-rolled hem. Cut to skim rather than cling, with a low back for evening wear.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "vellamor-gown-r1", author: "Sophia R.", rating: 5, comment: "The silk drapes beautifully, didn't need any alterations.", date: "February 2026" },
+      { id: "vellamor-gown-r2", author: "Amara K.", rating: 5, comment: "Fits true to size and photographs even better in person.", date: "December 2025" },
+    ],
+  },
+  {
+    id: "vellamor-corseted-ballgown", name: "Corseted Ballgown", brandSlug: "vellamor", category: "wedding-attire", price: 1450, colors: ["White", "Ivory"],
+    description: "A structured corset bodice paired with a full tulle skirt, boned by hand for a fitted waist without discomfort. Built for the aisle, not just the photos.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "vellamor-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "vellamor", category: "wigs", price: 210, colors: ["Blonde", "Brunette"],
+    description: "A delicate floral and pearl hairpiece designed to pair with an updo or half-up style. Lightweight enough to wear through a full reception.",
+  },
 
   // Noire & Co.
-  { id: "noire-wool-trench-coat", name: "Wool Trench Coat", brandSlug: "noire-and-co", category: "coats", price: 620, colors: ["Black", "Camel"], topSeller: true },
-  { id: "noire-bias-cut-slip-dress", name: "Bias-Cut Slip Dress", brandSlug: "noire-and-co", category: "gowns", price: 340, colors: ["Black", "Emerald"] },
-  { id: "noire-structured-blazer", name: "Structured Blazer", brandSlug: "noire-and-co", category: "coats", price: 480, colors: ["Black", "Ivory"] },
+  {
+    id: "noire-wool-trench-coat", name: "Wool Trench Coat", brandSlug: "noire-and-co", category: "coats", price: 620, colors: ["Black", "Camel"], topSeller: true,
+    description: "A double-breasted trench in heavyweight wool gabardine, cut with a dropped shoulder for an easy, unstructured fit.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "noire-coat-r1", author: "Jordan T.", rating: 5, comment: "Warm without being bulky, great for layering.", date: "January 2026" },
+      { id: "noire-coat-r2", author: "Marcus P.", rating: 4, comment: "Great coat, sleeves ran slightly long for me.", date: "November 2025" },
+    ],
+  },
+  {
+    id: "noire-bias-cut-slip-dress", name: "Bias-Cut Slip Dress", brandSlug: "noire-and-co", category: "gowns", price: 340, colors: ["Black", "Emerald"],
+    description: "Cut on the bias from a weighted matte satin, this slip dress moves with the body rather than against it.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "noire-structured-blazer", name: "Structured Blazer", brandSlug: "noire-and-co", category: "coats", price: 480, colors: ["Black", "Ivory"],
+    description: "A single-button blazer with a sharp shoulder line, built from a stretch wool blend that holds its shape through a full day.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
 
   // Isabeau Atelier
-  { id: "isabeau-hand-beaded-gown", name: "Hand-Beaded Gown", brandSlug: "isabeau-atelier", category: "wedding-attire", price: 2100, colors: ["Ivory"], topSeller: true },
-  { id: "isabeau-draped-cape-dress", name: "Draped Cape Dress", brandSlug: "isabeau-atelier", category: "gowns", price: 780, colors: ["Burgundy", "Black"] },
-  { id: "isabeau-embroidered-bodice", name: "Embroidered Bodice Gown", brandSlug: "isabeau-atelier", category: "gowns", price: 650, colors: ["Champagne", "Ivory"] },
+  {
+    id: "isabeau-hand-beaded-gown", name: "Hand-Beaded Gown", brandSlug: "isabeau-atelier", category: "wedding-attire", price: 2100, colors: ["Ivory"], topSeller: true,
+    description: "Every bead on this gown is sewn by hand, taking upward of sixty hours per piece. No two are ever exactly alike.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "isabeau-gown-r1", author: "Fatima N.", rating: 5, comment: "Every bead was intact on arrival, packaging was excellent.", date: "March 2026" },
+      { id: "isabeau-gown-r2", author: "Grace L.", rating: 5, comment: "Worth the wait — the detailing is incredible.", date: "January 2026" },
+    ],
+  },
+  {
+    id: "isabeau-draped-cape-dress", name: "Draped Cape Dress", brandSlug: "isabeau-atelier", category: "gowns", price: 780, colors: ["Burgundy", "Black"],
+    description: "A column dress with a detachable draped cape, so the same piece can move from ceremony to reception.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "isabeau-embroidered-bodice", name: "Embroidered Bodice Gown", brandSlug: "isabeau-atelier", category: "gowns", price: 650, colors: ["Champagne", "Ivory"],
+    description: "Hand-embroidered bodice over a silk organza skirt, finished with an internal corset for structure without a visible seam.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
 
   // Rousseau Maison
-  { id: "rousseau-structured-tote", name: "Structured Tote", brandSlug: "rousseau-maison", category: "bags", price: 420, colors: ["Cognac", "Black"], topSeller: true },
-  { id: "rousseau-top-handle-satchel", name: "Top-Handle Satchel", brandSlug: "rousseau-maison", category: "bags", price: 380, colors: ["Black", "Burgundy"] },
-  { id: "rousseau-leather-clutch", name: "Leather Clutch", brandSlug: "rousseau-maison", category: "bags", price: 240, colors: ["Cognac", "Black", "Ivory"] },
+  {
+    id: "rousseau-structured-tote", name: "Structured Tote", brandSlug: "rousseau-maison", category: "bags", price: 420, colors: ["Cognac", "Black"], topSeller: true,
+    description: "Full-grain leather tote with a reinforced base and hand-stitched handles, built to carry weight without losing shape.",
+    reviews: [
+      { id: "rousseau-tote-r1", author: "Ines F.", rating: 5, comment: "Holds a laptop and still has room to spare.", date: "February 2026" },
+      { id: "rousseau-tote-r2", author: "Deborah K.", rating: 4, comment: "Beautiful leather, a bit heavy when fully packed.", date: "October 2025" },
+    ],
+  },
+  {
+    id: "rousseau-top-handle-satchel", name: "Top-Handle Satchel", brandSlug: "rousseau-maison", category: "bags", price: 380, colors: ["Black", "Burgundy"],
+    description: "A structured satchel with a single top handle and a detachable strap, finished with brass hardware that ages with the leather.",
+  },
+  {
+    id: "rousseau-leather-clutch", name: "Leather Clutch", brandSlug: "rousseau-maison", category: "bags", price: 240, colors: ["Cognac", "Black", "Ivory"],
+    description: "A compact envelope clutch in vegetable-tanned leather, lined in suede with room for the essentials and nothing more.",
+  },
 
   // Thessaly
-  { id: "thessaly-emerald-drop-earrings", name: "Emerald Drop Earrings", brandSlug: "thessaly", category: "jewelry", price: 890, colors: ["Gold"], isNew: true },
-  { id: "thessaly-signet-ring", name: "Signet Ring", brandSlug: "thessaly", category: "jewelry", price: 310, colors: ["Gold", "Silver"], isNew: true },
-  { id: "thessaly-two-tone-watch", name: "Two-Tone Watch", brandSlug: "thessaly", category: "watches", price: 1200, colors: ["Gold/Silver"], isNew: true, topSeller: true },
+  {
+    id: "thessaly-emerald-drop-earrings", name: "Emerald Drop Earrings", brandSlug: "thessaly", category: "jewelry", price: 890, colors: ["Gold"], isNew: true,
+    description: "Emerald-cut stones set in eighteen-karat gold, finished with a secure lever-back closure for all-night wear.",
+  },
+  {
+    id: "thessaly-signet-ring", name: "Signet Ring", brandSlug: "thessaly", category: "jewelry", price: 310, colors: ["Gold", "Silver"], isNew: true,
+    description: "A hand-engraved signet in solid gold, sized to order and finished with a slightly domed face.",
+    sizes: ["5", "6", "7", "8", "9"],
+  },
+  {
+    id: "thessaly-two-tone-watch", name: "Two-Tone Watch", brandSlug: "thessaly", category: "watches", price: 1200, colors: ["Gold/Silver"], isNew: true, topSeller: true,
+    description: "A two-tone stainless and gold watch with a sapphire crystal face, water-resistant to 50 meters.",
+    reviews: [
+      { id: "thessaly-watch-r1", author: "Tobenna E.", rating: 5, comment: "Keeps perfect time and the two-tone finish is versatile.", date: "March 2026" },
+      { id: "thessaly-watch-r2", author: "Kwame B.", rating: 5, comment: "Feels substantial on the wrist without being heavy.", date: "February 2026" },
+    ],
+  },
 
   // Kavir House
-  { id: "kavir-wax-print-wrap-dress", name: "Wax-Print Wrap Dress", brandSlug: "kavir-house", category: "ankara", price: 180, colors: ["Multicolor"], topSeller: true },
-  { id: "kavir-ankara-blazer", name: "Ankara Blazer", brandSlug: "kavir-house", category: "ankara", price: 260, colors: ["Multicolor"] },
-  { id: "kavir-head-wrap-set", name: "Head Wrap Set", brandSlug: "kavir-house", category: "ankara", price: 85, colors: ["Multicolor"] },
+  {
+    id: "kavir-wax-print-wrap-dress", name: "Wax-Print Wrap Dress", brandSlug: "kavir-house", category: "ankara", price: 180, colors: ["Multicolor"], topSeller: true,
+    description: "A wrap silhouette cut from authentic wax-print cotton, sourced directly from West African textile mills.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "kavir-dress-r1", author: "Ngozi A.", rating: 5, comment: "Print is richer in person, wrap tie holds all day.", date: "March 2026" },
+      { id: "kavir-dress-r2", author: "Wale O.", rating: 4, comment: "Lovely dress, runs slightly big.", date: "December 2025" },
+    ],
+  },
+  {
+    id: "kavir-ankara-blazer", name: "Ankara Blazer", brandSlug: "kavir-house", category: "ankara", price: 260, colors: ["Multicolor"],
+    description: "A structured blazer cut from bold wax-print cotton, lined in a complementary solid for a clean finish.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "kavir-head-wrap-set", name: "Head Wrap Set", brandSlug: "kavir-house", category: "ankara", price: 85, colors: ["Multicolor"],
+    description: "A pre-tied head wrap set in coordinating wax prints, ready to wear without any styling required.",
+  },
 
   // Solenne & Vale
-  { id: "solenne-hand-lasted-pumps", name: "Hand-Lasted Pumps", brandSlug: "solenne-and-vale", category: "shoes", price: 340, colors: ["Black", "Nude"], isNew: true, topSeller: true },
-  { id: "solenne-block-heel-sandal", name: "Block-Heel Sandal", brandSlug: "solenne-and-vale", category: "shoes", price: 290, colors: ["Tan", "Black"], isNew: true },
-  { id: "solenne-leather-loafer", name: "Leather Loafer", brandSlug: "solenne-and-vale", category: "shoes", price: 260, colors: ["Black", "Burgundy"], isNew: true },
+  {
+    id: "solenne-hand-lasted-pumps", name: "Hand-Lasted Pumps", brandSlug: "solenne-and-vale", category: "shoes", price: 340, colors: ["Black", "Nude"], isNew: true, topSeller: true,
+    description: "Hand-lasted pumps with a cushioned insole and a block heel built for standing, not just sitting.",
+    sizes: ["6", "7", "8", "9", "10"],
+    reviews: [
+      { id: "solenne-pumps-r1", author: "Chloe B.", rating: 5, comment: "Wore these for 8 hours straight, zero discomfort.", date: "February 2026" },
+      { id: "solenne-pumps-r2", author: "Priya S.", rating: 5, comment: "Best heels I own for actually walking in.", date: "January 2026" },
+    ],
+  },
+  {
+    id: "solenne-block-heel-sandal", name: "Block-Heel Sandal", brandSlug: "solenne-and-vale", category: "shoes", price: 290, colors: ["Tan", "Black"], isNew: true,
+    description: "An ankle-strap sandal on a stable block heel, finished in a soft nappa leather that molds to the foot.",
+    sizes: ["6", "7", "8", "9", "10"],
+  },
+  {
+    id: "solenne-leather-loafer", name: "Leather Loafer", brandSlug: "solenne-and-vale", category: "shoes", price: 260, colors: ["Black", "Burgundy"], isNew: true,
+    description: "A penny loafer built on a supportive arch, finished in a supple leather that breaks in within a few wears.",
+    sizes: ["6", "7", "8", "9", "10"],
+  },
 
   // Marchetti Casa
-  { id: "marchetti-wool-overcoat", name: "Wool Overcoat", brandSlug: "marchetti-casa", category: "coats", price: 720, colors: ["Charcoal", "Camel"], topSeller: true },
-  { id: "marchetti-monochrome-midi-dress", name: "Monochrome Midi Dress", brandSlug: "marchetti-casa", category: "gowns", price: 410, colors: ["Black", "Ivory"] },
-  { id: "marchetti-tailored-trouser", name: "Tailored Trouser", brandSlug: "marchetti-casa", category: "coats", price: 260, colors: ["Charcoal", "Black"] },
+  {
+    id: "marchetti-wool-overcoat", name: "Wool Overcoat", brandSlug: "marchetti-casa", category: "coats", price: 720, colors: ["Charcoal", "Camel"], topSeller: true,
+    description: "A single-breasted overcoat in Italian wool, cut with a clean silhouette and minimal detailing.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "marchetti-coat-r1", author: "Derek M.", rating: 5, comment: "Tailoring is sharp, fabric feels genuinely luxurious.", date: "March 2026" },
+      { id: "marchetti-coat-r2", author: "Samuel D.", rating: 4, comment: "Great coat, runs slightly large in the shoulders.", date: "December 2025" },
+    ],
+  },
+  {
+    id: "marchetti-monochrome-midi-dress", name: "Monochrome Midi Dress", brandSlug: "marchetti-casa", category: "gowns", price: 410, colors: ["Black", "Ivory"],
+    description: "A midi-length dress in a single tone, cut with a subtle A-line for ease of movement.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "marchetti-tailored-trouser", name: "Tailored Trouser", brandSlug: "marchetti-casa", category: "coats", price: 260, colors: ["Charcoal", "Black"],
+    description: "A high-waisted, straight-leg trouser cut from a wool-blend twill, finished with a clean front seam.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
 
   // Noor Textiles
-  { id: "noor-original-print-kaftan", name: "Original Print Kaftan", brandSlug: "noor-textiles", category: "ankara", price: 220, colors: ["Multicolor"], isNew: true, topSeller: true },
-  { id: "noor-textile-wrap-skirt", name: "Textile Wrap Skirt", brandSlug: "noor-textiles", category: "ankara", price: 150, colors: ["Multicolor"], isNew: true },
-  { id: "noor-print-headscarf", name: "Print Headscarf", brandSlug: "noor-textiles", category: "ankara", price: 60, colors: ["Multicolor"], isNew: true },
+  {
+    id: "noor-original-print-kaftan", name: "Original Print Kaftan", brandSlug: "noor-textiles", category: "ankara", price: 220, colors: ["Multicolor"], isNew: true, topSeller: true,
+    description: "A relaxed kaftan cut from an exclusive in-house print, designed to move easily from day to evening.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    reviews: [
+      { id: "noor-kaftan-r1", author: "Fatima N.", rating: 5, comment: "Print is exclusive and the fabric breathes well.", date: "February 2026" },
+      { id: "noor-kaftan-r2", author: "Grace L.", rating: 4, comment: "Beautiful piece, lighter weight than I expected.", date: "January 2026" },
+    ],
+  },
+  {
+    id: "noor-textile-wrap-skirt", name: "Textile Wrap Skirt", brandSlug: "noor-textiles", category: "ankara", price: 150, colors: ["Multicolor"], isNew: true,
+    description: "A wrap skirt in an original textile print, finished with a self-tie waist for an adjustable fit.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "noor-print-headscarf", name: "Print Headscarf", brandSlug: "noor-textiles", category: "ankara", price: 60, colors: ["Multicolor"], isNew: true,
+    description: "A lightweight silk-blend headscarf in an exclusive print, finished with hand-rolled edges.",
+  },
 
   // Belle Couronne
-  { id: "belle-lace-front-wig", name: "Lace Front Human Hair Wig", brandSlug: "belle-couronne", category: "wigs", price: 380, colors: ["Black", "Brunette", "Blonde"], isNew: true, topSeller: true },
-  { id: "belle-silk-press-bundle-set", name: "Silk Press Bundle Set", brandSlug: "belle-couronne", category: "wigs", price: 150, colors: ["Black", "Brunette"], isNew: true },
-  { id: "belle-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "belle-couronne", category: "wigs", price: 95, colors: ["Blonde", "Brunette"], isNew: true },
+  {
+    id: "belle-lace-front-wig", name: "Lace Front Human Hair Wig", brandSlug: "belle-couronne", category: "wigs", price: 380, colors: ["Black", "Brunette", "Blonde"], isNew: true, topSeller: true,
+    description: "A hand-tied lace front unit in 100% human hair, customized to match face shape and preferred install method.",
+    sizes: ["S", "M", "L"],
+    reviews: [
+      { id: "belle-wig-r1", author: "Ngozi A.", rating: 5, comment: "Most natural hairline I've had from a unit this price.", date: "March 2026" },
+      { id: "belle-wig-r2", author: "Amara K.", rating: 5, comment: "Customization made all the difference, install was seamless.", date: "February 2026" },
+    ],
+  },
+  {
+    id: "belle-silk-press-bundle-set", name: "Silk Press Bundle Set", brandSlug: "belle-couronne", category: "wigs", price: 150, colors: ["Black", "Brunette"], isNew: true,
+    description: "A three-bundle set of silk-pressed human hair, pre-conditioned and ready to install.",
+  },
+  {
+    id: "belle-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "belle-couronne", category: "wigs", price: 95, colors: ["Blonde", "Brunette"], isNew: true,
+    description: "A delicate bridal hair accent designed to pair with any of Belle Couronne's units or a natural style.",
+  },
 ];
 
 export interface Designer {
@@ -378,28 +542,8 @@ export interface PartnerType {
 }
 
 export const partnerTypes: PartnerType[] = [
-  {
-    label: "Brands",
-    path: "/partners/brands",
-    description: "List your collections and reach a curated audience.",
-    audienceType: "Brand",
-  },
-  {
-    label: "Designers",
-    path: "/partners/designers",
-    description: "Take bookings and bespoke commissions through Aurence.",
-    audienceType: "Designer",
-  },
-  {
-    label: "Logistics",
-    path: "/partners/logistics",
-    description: "Handle fulfillment and delivery across our network.",
-    audienceType: "Logistics",
-  },
-  {
-    label: "Advertising",
-    path: "/partners/advertising",
-    description: "Put your campaigns in front of ready-to-buy shoppers.",
-    audienceType: "Advertising",
-  },
+  { label: "Brands", path: "/partners/brands", description: "List your collections and reach a curated audience.", audienceType: "Brand" },
+  { label: "Designers", path: "/partners/designers", description: "Take bookings and bespoke commissions through Aurence.", audienceType: "Designer" },
+  { label: "Logistics", path: "/partners/logistics", description: "Handle fulfillment and delivery across our network.", audienceType: "Logistics" },
+  { label: "Advertising", path: "/partners/advertising", description: "Put your campaigns in front of ready-to-buy shoppers.", audienceType: "Advertising" },
 ];

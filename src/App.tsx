@@ -10,6 +10,7 @@ import { BrandsDirectory } from "@/pages/BrandsDirectory";
 import { BrandDetail } from "@/pages/BrandDetail";
 import { Shop } from "@/pages/Shop";
 import { ShopCategory } from "@/pages/ShopCategory";
+import { ProductDetail } from "@/pages/ProductDetail";
 import { DesignerDetail } from "@/pages/DesignerDetail";
 import { DesignersDirectory } from "@/pages/DesignersDirectory";
 import { UnderConstruction } from "@/pages/UnderConstruction";
@@ -36,6 +37,7 @@ function App() {
               <Route path="/brands/:slug" element={<BrandDetail />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:category" element={<ShopCategory />} />
+              <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/designers" element={<DesignersDirectory />} />
               <Route path="/designers/:slug" element={<DesignerDetail />} />
               <Route path="*" element={<UnderConstruction />} />

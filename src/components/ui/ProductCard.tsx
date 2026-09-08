@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/mockData";
-import { brands, shopCategories } from "@/lib/mockData";
+import { brands, featuredDesigners, shopCategories } from "@/lib/mockData";
 import { colorSwatch } from "@/lib/colorSwatches";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
@@ -21,7 +21,11 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0, variant = "compact" }: ProductCardProps) {
-  const brand = brands.find((b) => b.slug === product.brandSlug);
+  const brand = product.brandSlug ? brands.find((b) => b.slug === product.brandSlug) : undefined;
+  const designer = product.designerSlug
+    ? featuredDesigners.find((d) => d.slug === product.designerSlug)
+    : undefined;
+  const sellerName = brand?.name ?? designer?.name;
   const category = shopCategories.find((c) => c.slug === product.category);
   const [saved, setSaved] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
@@ -95,8 +99,8 @@ export function ProductCard({ product, index = 0, variant = "compact" }: Product
           <p className="font-display text-base text-bone transition-colors group-hover:text-champagne light:text-ink">
             {product.name}
           </p>
-          {brand && (
-            <p className="mt-1 text-xs text-bone/50 light:text-ink/50">{brand.name}</p>
+          {sellerName && (
+            <p className="mt-1 text-xs text-bone/50 light:text-ink/50">{sellerName}</p>
           )}
           <p className="eyebrow mt-2 text-champagne">${product.price}</p>
 

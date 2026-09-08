@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { brands, products, shopCategories, type Review } from "@/lib/mockData";
+import { brands, featuredDesigners, products, shopCategories, type Review } from "@/lib/mockData";
 import { colorSwatch } from "@/lib/colorSwatches";
 import { StarRating } from "@/components/ui/StarRating";
 import { ProductCard } from "@/components/ui/ProductCard";
@@ -50,7 +50,10 @@ export function ProductDetail() {
     );
   }
 
-  const brand = brands.find((b) => b.slug === product.brandSlug);
+  const brand = product.brandSlug ? brands.find((b) => b.slug === product.brandSlug) : undefined;
+  const designer = product.designerSlug
+    ? featuredDesigners.find((d) => d.slug === product.designerSlug)
+    : undefined;
   const category = shopCategories.find((c) => c.slug === product.category);
   const selectedColor = product.colors[colorIndex];
   const needsSize = Boolean(product.sizes?.length);
@@ -176,6 +179,14 @@ export function ProductDetail() {
                 className="eyebrow text-champagne transition-colors hover:text-champagne-soft"
               >
                 {brand.name}
+              </Link>
+            )}
+            {designer && (
+              <Link
+                to={`/designers/${designer.slug}`}
+                className="eyebrow text-champagne transition-colors hover:text-champagne-soft"
+              >
+                {designer.name}
               </Link>
             )}
             <h1 className="font-display mt-2 text-3xl text-bone sm:text-4xl light:text-ink">

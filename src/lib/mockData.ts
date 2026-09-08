@@ -246,7 +246,9 @@ export const shopCategories: ShopCategory[] = [
 export interface Product {
   id: string;
   name: string;
-  brandSlug: string;
+  /** Exactly one of brandSlug/designerSlug is set — who sells this piece. */
+  brandSlug?: string;
+  designerSlug?: string;
   /** Matches ShopCategory.slug. */
   category: string;
   /** Whole-dollar placeholder price. */
@@ -476,6 +478,46 @@ export const products: Product[] = [
     id: "belle-bridal-hair-piece", name: "Bridal Hair Piece", brandSlug: "belle-couronne", category: "wigs", price: 95, colors: ["Blonde", "Brunette"], isNew: true,
     description: "A delicate bridal hair accent designed to pair with any of Belle Couronne's units or a natural style.",
   },
+
+  // Ready-to-wear from designers (sold directly, not through a brand)
+  {
+    id: "adaeze-ivory-chiffon-slip-gown", name: "Ivory Chiffon Slip Gown", designerSlug: "adaeze-obi", category: "gowns", price: 420, colors: ["Ivory"],
+    description: "A ready-to-wear slip gown in soft chiffon, adapted from one of Adaeze's bridal patterns for everyday occasions.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "adaeze-beaded-bridal-sash", name: "Beaded Bridal Sash", designerSlug: "adaeze-obi", category: "wedding-attire", price: 95, colors: ["Ivory", "Gold"],
+    description: "A hand-beaded sash that pairs with an existing gown, ready to ship rather than made to order.",
+  },
+  {
+    id: "lior-notch-lapel-blazer", name: "Classic Notch-Lapel Blazer", designerSlug: "lior-ben-david", category: "coats", price: 380, colors: ["Charcoal", "Navy"],
+    description: "A ready-to-wear take on Lior's signature tailoring, cut from the same wool he uses for made-to-measure commissions.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "lior-wool-dress-trouser", name: "Wool Dress Trouser", designerSlug: "lior-ben-david", category: "coats", price: 220, colors: ["Charcoal", "Black"],
+    description: "A straight-leg dress trouser in the same wool blend as Lior's bespoke suiting.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "camille-satin-slip-gown", name: "Satin Slip Gown", designerSlug: "camille-deschamps", category: "gowns", price: 310, colors: ["Black", "Champagne"],
+    description: "A ready-to-wear satin slip gown, cut with the same draping principles Camille uses in her bespoke eveningwear.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "camille-draped-jersey-dress", name: "Draped Jersey Dress", designerSlug: "camille-deschamps", category: "gowns", price: 275, colors: ["Black", "Burgundy"],
+    description: "A jersey dress with soft draping at the waist, designed to move under low light like the rest of Camille's work.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "ngozi-rtw-ankara-dress", name: "Ready-to-Wear Ankara Dress", designerSlug: "ngozi-umeh", category: "ankara", price: 160, colors: ["Multicolor"],
+    description: "A ready-to-ship dress from one of Ngozi's past print combinations — once it's gone, that exact pairing won't be repeated.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+  },
+  {
+    id: "ngozi-print-wrap-top", name: "Print Wrap Top", designerSlug: "ngozi-umeh", category: "ankara", price: 75, colors: ["Multicolor"],
+    description: "A wrap top in an original Ngozi Umeh print, ready to wear without a custom commission.",
+  },
 ];
 
 export interface Designer {
@@ -493,6 +535,23 @@ export interface Designer {
    * yet, so Lior is loosely tagged under "coats" until one exists.
    */
   categories?: string[];
+  location: string;
+  availability: {
+    status: "open" | "limited" | "waitlist";
+    note: string;
+  };
+  /** Human-readable turnaround, e.g. "6–8 weeks" — not meant to be parsed. */
+  averageTurnaround: string;
+  /**
+   * Baseline mock "liked by" count — does NOT include the current
+   * browser's own favorite (added live from useFavoriteDesigners so the
+   * number updates immediately when you click the heart), matching the
+   * same pattern as Brand.likedByCount.
+   */
+  likedByCount: number;
+  /** Reviews shown on the profile page. Average rating is computed live
+   *  from this array rather than stored separately. */
+  reviews: Review[];
 }
 
 export const featuredDesigners: Designer[] = [
@@ -504,6 +563,15 @@ export const featuredDesigners: Designer[] = [
     bio: "Adaeze has spent twelve years shaping bridal silhouettes by hand — every gown starts with a single fitting and a conversation about how the day should feel, not just look.",
     notableWork: ["Cathedral Lace Gown", "Convertible Two-Piece Bridal Set", "Hand-Beaded Bridal Cape"],
     categories: ["gowns", "wedding-attire"],
+    location: "Lagos, Nigeria",
+    availability: { status: "limited", note: "Booking 3 slots per month" },
+    averageTurnaround: "8–10 weeks",
+    likedByCount: 214,
+    reviews: [
+      { id: "adaeze-r1", author: "Halima Y.", rating: 5, comment: "My gown fit perfectly and the beading was even more detailed in person.", date: "February 2026" },
+      { id: "adaeze-r2", author: "Ronke A.", rating: 5, comment: "Adaeze listened to exactly what I wanted and delivered beyond it.", date: "December 2025" },
+      { id: "adaeze-r3", author: "Bianca O.", rating: 4, comment: "Beautiful work, turnaround took a couple weeks longer than quoted.", date: "October 2025" },
+    ],
   },
   {
     name: "Lior Ben-David",
@@ -513,6 +581,15 @@ export const featuredDesigners: Designer[] = [
     bio: "Lior trained on Savile Row before opening his own atelier, building suits around how a client actually moves rather than how they stand still for a fitting.",
     notableWork: ["Three-Piece Wool Suit", "Double-Breasted Evening Jacket", "Made-to-Measure Waistcoat"],
     categories: ["coats"],
+    location: "London, United Kingdom",
+    availability: { status: "open", note: "Accepting new commissions" },
+    averageTurnaround: "4–6 weeks",
+    likedByCount: 98,
+    reviews: [
+      { id: "lior-r1", author: "James H.", rating: 5, comment: "Best-fitting suit I've ever owned, worth every fitting session.", date: "January 2026" },
+      { id: "lior-r2", author: "Daniel F.", rating: 5, comment: "Lior's attention to how the jacket actually moves is unmatched.", date: "November 2025" },
+      { id: "lior-r3", author: "Oliver S.", rating: 4, comment: "Excellent craftsmanship, book early as slots fill fast.", date: "September 2025" },
+    ],
   },
   {
     name: "Camille Deschamps",
@@ -522,6 +599,15 @@ export const featuredDesigners: Designer[] = [
     bio: "Camille designs for the specific hour after sunset — draped eveningwear built to move under low light, informed by her years designing for the stage before fashion.",
     notableWork: ["Silk Draped Column Gown", "Structured Cape Gown", "Beaded Evening Blouse"],
     categories: ["gowns"],
+    location: "Paris, France",
+    availability: { status: "waitlist", note: "Currently full — joining opens a waitlist spot" },
+    averageTurnaround: "6–8 weeks",
+    likedByCount: 156,
+    reviews: [
+      { id: "camille-r1", author: "Élise M.", rating: 5, comment: "The gown moved exactly as she described in our first call.", date: "February 2026" },
+      { id: "camille-r2", author: "Naomi T.", rating: 5, comment: "Worth the wait — the draping is unlike anything off the rack.", date: "December 2025" },
+      { id: "camille-r3", author: "Sofia G.", rating: 4, comment: "Gorgeous piece, the waitlist is long so plan ahead.", date: "October 2025" },
+    ],
   },
   {
     name: "Ngozi Umeh",
@@ -531,6 +617,15 @@ export const featuredDesigners: Designer[] = [
     bio: "Ngozi works exclusively in commissioned print combinations, designing one-of-one pieces that never repeat a fabric pairing twice.",
     notableWork: ["Custom Ankara Gown", "Print-Blocked Two-Piece Set", "Commissioned Head Wrap"],
     categories: ["ankara"],
+    location: "Accra, Ghana",
+    availability: { status: "open", note: "Accepting new commissions" },
+    averageTurnaround: "3–5 weeks",
+    likedByCount: 87,
+    reviews: [
+      { id: "ngozi-r1", author: "Adaeze F.", rating: 5, comment: "My custom print combination came out exactly as I imagined.", date: "March 2026" },
+      { id: "ngozi-r2", author: "Yaa B.", rating: 5, comment: "Fast turnaround and the print pairing was so thoughtful.", date: "January 2026" },
+      { id: "ngozi-r3", author: "Efua K.", rating: 5, comment: "Ngozi's prints never repeat — mine is truly one of a kind.", date: "November 2025" },
+    ],
   },
 ];
 

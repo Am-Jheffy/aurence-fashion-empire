@@ -85,7 +85,7 @@ export function ShopCategory() {
 
   const filtered = useMemo(() => {
     const list = categoryProducts.filter((p) => {
-      if (activeBrands.length > 0 && !activeBrands.includes(p.brandSlug)) return false;
+      if (activeBrands.length > 0 && (!p.brandSlug || !activeBrands.includes(p.brandSlug))) return false;
       if (activeColors.length > 0 && !p.colors.some((c) => activeColors.includes(c))) return false;
       if (activePrices.length > 0) {
         const matchesAnyBand = activePrices.some((bandValue) => {

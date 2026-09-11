@@ -1,6 +1,7 @@
 export interface NavLink {
   label: string;
   path: string;
+  /** Marks features that exist beyond the "Under Construction" placeholder. */
   isLive: boolean;
 }
 
@@ -8,7 +9,7 @@ export const primaryNav: NavLink[] = [
   { label: "Shop", path: "/shop", isLive: true },
   { label: "Brands", path: "/brands", isLive: true },
   { label: "Designers", path: "/designers", isLive: true },
-  { label: "Dressing Room", path: "/dressing-room", isLive: false },
+  { label: "Dressing Room", path: "/dressing-room", isLive: true },
 ];
 
 export const footerShopLinks: NavLink[] = [
@@ -30,6 +31,7 @@ export const socialLinks: { label: string; href: string }[] = [
   { label: "Instagram", href: "https://instagram.com" },
   { label: "Pinterest", href: "https://pinterest.com" },
   { label: "TikTok", href: "https://tiktok.com" },
+  { label: "X", href: "https://x.com" },
 ];
 
 /** Categories shown in the hero's slow-drifting atelier ticker. */

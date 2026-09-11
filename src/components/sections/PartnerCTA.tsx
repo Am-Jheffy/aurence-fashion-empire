@@ -22,7 +22,7 @@ export function PartnerCTA() {
           transition={{ duration: 0.6, ease: easeCouture }}
           className="eyebrow text-champagne"
         >
-          Join the House
+          Partner With Us
         </motion.p>
 
         <motion.h2

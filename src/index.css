@@ -52,7 +52,7 @@
   }
 
   .eyebrow {
-    @apply font-body uppercase tracking-[0.28em] text-xs font-semibold;
+    @apply font-body uppercase tracking-[0.20em] text-xs font-semibold;
   }
 
   .stitch-divider {

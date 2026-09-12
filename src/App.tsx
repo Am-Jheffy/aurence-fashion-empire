@@ -15,19 +15,37 @@ import { ShopCategory } from "@/pages/ShopCategory";
 import { ProductDetail } from "@/pages/ProductDetail";
 import { DesignerDetail } from "@/pages/DesignerDetail";
 import { DesignersDirectory } from "@/pages/DesignersDirectory";
-// import { Auth } from "@/pages/Auth";
+import { Auth } from "@/pages/Auth";
 // import { DressingRoom } from "@/pages/DressingRoom";
 import { UnderConstruction } from "@/pages/UnderConstruction";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+
   useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      // Give the new page a tick to render before measuring its position —
+      // the target section may not exist in the DOM yet on the same frame
+      // the route changes.
+      const timer = window.setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+      return () => window.clearTimeout(timer);
+    }
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [location.pathname, location.hash]);
+
   return null;
 }
 
+/** Routes that render full-bleed, without the global Header/Footer. */
+const NO_CHROME_PATHS = ["/login", "/signup", "/reset-password"];
+
 function App() {
+  const location = useLocation();
+  const hideChrome = NO_CHROME_PATHS.includes(location.pathname);
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -35,7 +53,7 @@ function App() {
           <WaitlistModalProvider>
             <ScrollToTop />
             <div className="flex min-h-screen flex-col">
-              <Header />
+              {!hideChrome && <Header />}
               <main className="flex-1">
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -46,14 +64,14 @@ function App() {
                   <Route path="/products/:id" element={<ProductDetail />} />
                   <Route path="/designers" element={<DesignersDirectory />} />
                   <Route path="/designers/:slug" element={<DesignerDetail />} />
-                  {/* <Route path="/login" element={<Auth />} /> */}
-                  {/* <Route path="/signup" element={<Auth />} /> */}
-                  {/* <Route path="/reset-password" element={<Auth />} /> */}
+                  <Route path="/login" element={<Auth />} />
+                  <Route path="/signup" element={<Auth />} />
+                  <Route path="/reset-password" element={<Auth />} />
                   {/* <Route path="/dressing-room" element={<DressingRoom />} /> */}
                   <Route path="*" element={<UnderConstruction />} />
                 </Routes>
               </main>
-              <Footer />
+              {!hideChrome && <Footer />}
             </div>
             <WaitlistModal />
           </WaitlistModalProvider>

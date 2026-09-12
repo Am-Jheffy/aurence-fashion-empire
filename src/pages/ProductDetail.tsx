@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { brands, featuredDesigners, products, shopCategories, type Review } from "@/lib/mockData";
 import { colorSwatch } from "@/lib/colorSwatches";
 import { StarRating } from "@/components/ui/StarRating";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
 export function ProductDetail() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const { addToCart } = useCart();
   const product = products.find((p) => p.id === id);
 
   const [colorIndex, setColorIndex] = useState(0);
@@ -77,8 +82,17 @@ export function ProductDetail() {
   }
 
   function handleAddToCart() {
-    // TODO: wire to CartContext once it exists. Cosmetic feedback only.
-    if (!canAddToCart) return;
+    if (!canAddToCart || !product) return;
+    if (!isLoggedIn) {
+      navigate("/login", { state: { from: window.location.pathname } });
+      return;
+    }
+    addToCart({
+      productId: product.id,
+      quantity,
+      size: selectedSize ?? undefined,
+      color: selectedColor,
+    });
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1500);
   }

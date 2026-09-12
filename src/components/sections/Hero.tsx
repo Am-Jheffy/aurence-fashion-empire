@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { StitchLine } from "@/components/ui/StitchLine";
 import { atelierCategories } from "@/lib/navigation";
 import { useWaitlistModal } from "@/context/WaitlistModalContext";
+import { Link } from "react-router-dom";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
@@ -46,8 +47,8 @@ export function Hero() {
             className="mt-7 max-w-md text-base leading-relaxed text-bone/70 light:text-ink/70"
           >
             Aurence brings the world's most coveted brands into a single
-            wardrobe. Curate across houses, build a look from head to toe,
-            and check out once — no matter how many ateliers it came from.
+            wardrobe. Curate across houses, build a look from head to toe, and
+            check out once — no matter how many ateliers it came from.
           </motion.p>
 
           <motion.div
@@ -56,19 +57,20 @@ export function Hero() {
             transition={{ duration: 0.7, ease: easeCouture, delay: 0.3 }}
             className="mt-10 flex flex-wrap items-center gap-5"
           >
+            <Link to="/shop/gowns">
+              <button
+                type="button"
+                className="rounded-full bg-bordeaux px-7 py-3.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright cursor-pointer"
+              >
+                View Our Marketplace
+              </button>
+            </Link>
             <button
               type="button"
               onClick={() => openModal("Customer")}
-              className="rounded-full bg-bordeaux px-7 py-3.5 text-sm font-semibold text-bone transition-colors hover:bg-bordeaux-bright cursor-pointer"
-            >
-              Enter the House
-            </button>
-            <button
-              type="button"
-              onClick={() => openModal("Brand")}
               className="eyebrow border-b border-champagne/50 pb-1 text-bone/80 transition-colors hover:border-champagne hover:text-champagne light:text-ink/70 cursor-pointer"
             >
-              Become a Partner Brand
+              Join the WaitList
             </button>
           </motion.div>
 
@@ -88,7 +90,11 @@ export function Hero() {
 
         {/* Divider */}
         <div className="hidden lg:block">
-          <StitchLine orientation="vertical" className="h-full text-champagne/40" delay={0.6} />
+          <StitchLine
+            orientation="vertical"
+            className="h-full text-champagne/40"
+            delay={0.6}
+          />
         </div>
 
         {/* Right: monogram seal */}

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/mockData";
 import { brands, featuredDesigners, shopCategories } from "@/lib/mockData";
 import { colorSwatch } from "@/lib/colorSwatches";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 const easeCouture = [0.16, 1, 0.3, 1] as const;
 
@@ -13,14 +15,17 @@ interface ProductCardProps {
   /**
    * "compact" (default): browse-only card, used on the Shop landing page
    * teasers. "shopping": adds Save + Add to Cart, used in the Main
-   * Shopping View (ShopCategory). Both actions are stubbed — see the
-   * handlers below — until CartContext and a real saved-items store
-   * exist.
+   * Shopping View (ShopCategory). Add to Cart is wired to the real
+   * CartContext and gated behind login; Save is still a local-only stub
+   * (see the TODO below).
    */
   variant?: "compact" | "shopping";
 }
 
 export function ProductCard({ product, index = 0, variant = "compact" }: ProductCardProps) {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+  const { addToCart } = useCart();
   const brand = product.brandSlug ? brands.find((b) => b.slug === product.brandSlug) : undefined;
   const designer = product.designerSlug
     ? featuredDesigners.find((d) => d.slug === product.designerSlug)
@@ -43,7 +48,11 @@ export function ProductCard({ product, index = 0, variant = "compact" }: Product
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault();
-    // TODO: wire to CartContext once it exists. Cosmetic feedback only.
+    if (!isLoggedIn) {
+      navigate("/login", { state: { from: window.location.pathname } });
+      return;
+    }
+    addToCart({ productId: product.id, quantity: 1 });
     setJustAdded(true);
     window.setTimeout(() => setJustAdded(false), 1500);
   }

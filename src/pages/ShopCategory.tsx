@@ -295,6 +295,7 @@ export function ShopCategory() {
             <input
               type="text"
               value={searchText}
+              autoFocus
               onChange={(e) =>
                 updateParams((next) => {
                   if (e.target.value) next.set("q", e.target.value);
